@@ -1,0 +1,19 @@
+# ===================================================================
+# Spring Cloud Configuration
+# ===================================================================
+server:
+  port: 8888
+management:
+  context-path: /admin
+
+spring:
+  profiles:
+    active: vault
+  cloud:
+    config:
+      server:
+        vault:
+          host: localhost
+          port: 8200
+          scheme: http
+          backend: 19aefa97-cccc-bbbb-aaaa-225940e63d76

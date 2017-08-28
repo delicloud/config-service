@@ -1,0 +1,12 @@
+version: '2'
+services:
+    vault:
+        image: vault:0.8.1
+        environment:
+            - VAULT_DEV_ROOT_TOKEN_ID=19aefa97-cccc-bbbb-aaaa-225940e63d76
+        ports:
+            - 8200:8200
+        volumes:
+            - ~/Volumes/vault/logs:/vault/logs
+            - ~/Volumes/vault/file:/vault/file
+        command: server -dev
