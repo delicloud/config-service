@@ -2,13 +2,7 @@
 
 
 pipeline {
-    agent {
-        docker {
-            image 'maven:3.3.3-jdk-8'
-            label 'docker'
-            args '-v /root/.m2:/root/.m2 -v /tmp:/tmp'
-        }
-    }
+    agent any
 
     stages {
         stage('CHECKOUT') {
