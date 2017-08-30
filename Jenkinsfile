@@ -2,7 +2,13 @@
 
 
 pipeline {
-    agent { label 'swarm' }
+    agent {
+        docker {
+            image 'maven:3.3.3-jdk-8'
+            label 'swarm'
+            args '-v /root/.m2:/root/.m2 -v /tmp:/tmp'
+        }
+    }
 
     stages {
         stage('CHECKOUT') {
