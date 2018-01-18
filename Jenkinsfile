@@ -15,7 +15,7 @@ node {
     def dockerImage
     stage('PACKAGE') {
         sh "cp -R src/main/docker build/"
-        sh "cp build/libs/*.war build/docker/"
+        sh "cp target/*.war build/docker/"
         dockerImage = docker.build('config-service', 'build/docker')
     }
 
