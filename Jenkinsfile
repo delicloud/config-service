@@ -18,11 +18,10 @@ pipeline {
                 sh 'mvn package'
             }
         }
-        def dockerImage
         stage('PACKAGE') {
             sh "cp -R src/main/docker build/"
             sh "cp build/libs/*.war build/docker/"
-            dockerImage = docker.build('config-service', 'build/docker')
+            def dockerImage = docker.build('config-service', 'build/docker')
         }
 
         stage('PUBLISH') {
