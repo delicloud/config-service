@@ -19,14 +19,17 @@ pipeline {
             }
         }
         stage('PACKAGE') {
-            sh "cp -R src/main/docker build/"
-            sh "cp build/libs/*.war build/docker/"
-            def dockerImage = docker.build('config-service', 'build/docker')
+            steps {
+                sh "cp -R src/main/docker build/"
+                sh "cp build/libs/*.war build/docker/"
+                def dockerImage = docker.build('config-service', 'build/docker')
+            }
         }
-
         stage('PUBLISH') {
-            docker.withRegistry('http://thoughtworks.io:5001', 'registry-login') {
-                dockerImage.push 'latest'
+            steps {
+                docker.withRegistry('http://thoughtworks.io:5001', 'registry-login') {
+                    dockerImage.push 'latest'
+                }
             }
         }
     }
