@@ -1,41 +1,27 @@
-pipeline {
-    agent {
-        docker {
-            image 'maven:3.3.3-jdk-8'
-            args '-v /root/.m2:/root/.m2 -v /tmp:/tmp'
+#!/usr/bin/env groovy
+
+node {
+    stage('checkout') {
+        checkout scm
+    }
+
+    docker.image('maven:3.3.3-jdk-8').inside('-v /root/.m2:/root/.m2 -v /tmp:/tmp') {
+        stage('BUILD') {
+            sh "mvn clean"
+            sh "mvn package"
         }
     }
 
-    stages {
-        stage('CHECKOUT') {
-            steps {
-                checkout scm
-            }
-        }
-        stage('BUILD') {
-            steps {
-                sh 'mvn clean'
-                sh 'mvn package'
-            }
-        }
-        stage('PACKAGE') {
-            steps {
-                sh "cp -R src/main/docker build/"
-                sh "cp build/libs/*.war build/docker/"
-                def dockerImage = docker.build('config-service', 'build/docker')
-            }
-        }
-        stage('PUBLISH') {
-            steps {
-                docker.withRegistry('http://thoughtworks.io:5001', 'registry-login') {
-                    dockerImage.push 'latest'
-                }
-            }
-        }
+    def dockerImage
+    stage('PACKAGE') {
+        sh "cp -R src/main/docker build/"
+        sh "cp build/libs/*.war build/docker/"
+        dockerImage = docker.build('config-service', 'build/docker')
     }
-    post {
-        always {
-            echo 'I will always say Hello again!'
+
+    stage('PUBLISH') {
+        docker.withRegistry('http://thoughtworks.io:5001', 'registry-login') {
+            dockerImage.push 'latest'
         }
     }
 }
