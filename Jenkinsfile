@@ -14,9 +14,9 @@ node {
 
     def dockerImage
     stage('PACKAGE') {
-        sh "cp -R src/main/docker build/"
-        sh "cp target/*.war build/docker/"
-        dockerImage = docker.build('deliflow/config-service', 'build/docker')
+        sh "cp -R src/main/docker target/"
+        sh "cp target/*.war target/docker/"
+        dockerImage = docker.build('deliflow/config-service', 'target/docker')
     }
 
     stage('PUBLISH') {
